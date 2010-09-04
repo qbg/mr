@@ -86,16 +86,17 @@ received"
 (defn make-wq
   "Create a new running wq with n workers"
   [n]
-  (let [chans (doall (repeatedly n make-chan))
+  (let [chans (vec (repeatedly n make-chan))
 	wq (WorkQueue. (make-chan)
 		       (make-chan)
 		       chans
 		       (atom true)
 		       (atom n))]
-    (doseq [c chans]
-      (.start (Thread. #(worker wq c)))
-      (put-chan (:workers wq) c))
-    (.start (Thread. #(wq-controller wq)))
+    (dotimes [n (count chans)]
+      (let [c (nth chans n)]
+	(.start (Thread. #(worker wq c) (str "WQ Worker " n)))
+	(put-chan (:workers wq) c)))
+    (.start (Thread. #(wq-controller wq) "WQ Controller"))
     wq))
 
 (defn invoke-later-task
