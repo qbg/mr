@@ -1,0 +1,13 @@
+# mr
+
+A single JVM mapreduce implementation
+
+## Usage
+
+See the docstring for mr.core/mapreduce
+
+## License
+
+Copyright (C) 2010 Brian Goslinga
+
+Distributed under the Eclipse Public License, the same as Clojure.
