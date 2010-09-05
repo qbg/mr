@@ -50,6 +50,6 @@ number of workers (defaults to number of available processors), and :chunks to
 set the chunk size (defaults to 1)"
   [& options]
   (let [{:keys [workers chunks]
-	 :or {workers (available-processors), chunks 1}}
+	 :or {workers (.. Runtime getRuntime availableProcessors), chunks 1}}
 	options]
     #(mapreduce workers chunks %1 %2 %3 %4)))
