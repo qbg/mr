@@ -50,6 +50,10 @@ number of workers (defaults to number of available processors), and :chunks to
 set the chunk size (defaults to 1)"
   [& options]
   (let [{:keys [workers chunks]
-	 :or {workers (.. Runtime getRuntime availableProcessors), chunks 1}}
-	options]
+	 :or {workers (.. Runtime getRuntime availableProcessors), chunks 1}
+	 :as opts}
+	options
+	remainder (apply dissoc opts [:workers :chunks])]
+    (if (not= remainder {})
+      (throw (IllegalArgumentException. (format "Unknown options %s" remainder))))
     #(mapreduce workers chunks %1 %2 %3 %4)))
