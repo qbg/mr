@@ -45,7 +45,11 @@ threads, each processing chunks up to c elements of coll long."
       @val)))
 
 (defn mr
-  "Mapreduce factory function; returns mapreduce with the first two arguments
-provided, the number of workers and the size of the chunks"
-  [n c]
-  #(mapreduce n c %1 %2 %3 %4))
+  "Factory function for mapreduce. Recognized options are :workers to set the
+number of workers (defaults to number of available processors), and :chunks to
+set the chunk size (defaults to 1)"
+  [& options]
+  (let [{:keys [workers chunks]
+	 :or {workers (available-processors), chunks 1}}
+	options]
+    #(mapreduce workers chunks %1 %2 %3 %4)))
